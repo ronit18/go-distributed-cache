@@ -5,6 +5,7 @@ import (
 	"go-distributed-cache/cache"
 	"log"
 	"net"
+	"strings"
 )
 
 type ServerOpts struct {
@@ -56,5 +57,41 @@ func (s *Server) handleConn(conn net.Conn) {
 		}
 		msg := buf[:n]
 		fmt.Println(string(msg))
+
+		go s.handleCommand(conn, msg)
 	}
+
+}
+
+func (s *Server) handleCommand(conn net.Conn, rawCmd []byte) {
+	var (
+		rawStr = string(rawCmd)
+		parts  = strings.Split(rawStr, " ")
+	)
+
+	if len(parts) == 0 {
+		//respond
+		log.Println("empty command")
+		return
+	}
+
+	cmd := parts[0]
+
+	if cmd == CMDSet {
+		if len(parts) != 4 {
+			//respond
+			log.Println("invalid SET command")
+			return
+		}
+		msg := &MSGSet{
+			Key:   []byte(parts[1]),
+			Value: []byte(parts[2]),
+			TTL:   parts[3],
+		}
+		if err := s.handleSetCmd(conn, msg)
+
+}
+
+func (s *Server) handleSetCmd(conn net.Conn) error {
+	return nil
 }
