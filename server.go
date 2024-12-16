@@ -5,7 +5,6 @@ import (
 	"go-distributed-cache/cache"
 	"log"
 	"net"
-	"strings"
 )
 
 type ServerOpts struct {
@@ -88,10 +87,12 @@ func (s *Server) handleCommand(conn net.Conn, rawCmd []byte) {
 			Value: []byte(parts[2]),
 			TTL:   parts[3],
 		}
-		if err := s.handleSetCmd(conn, msg)
+		// if err := s.handleSetCmd(conn, msg){
+
+		// }
 
 }
 
-func (s *Server) handleSetCmd(conn net.Conn) error {
-	return nil
-}
+// func (s *Server) handleSetCmd(conn net.Conn) error {
+// 	return nil
+// }
